@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, TextInput } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 
 export default function Input({ autoFocus = false }) {
   const [text, setText] = useState("");
