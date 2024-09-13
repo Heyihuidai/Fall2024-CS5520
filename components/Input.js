@@ -3,9 +3,15 @@ import { View, Text, TextInput } from 'react-native';
 
 export default function Input({ autoFocus = false }) {
   const [text, setText] = useState("");
-  const [isFocused, setIsFocused] = useState(true);
+  const [isFocused, setIsFocused] = useState(autoFocus);
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
+  
   function updateText(changedText) {
     setText(changedText);
   }
