@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { View, TextInput } from 'react-native';
 
-export default function Input() {
+export default function Input({ autoFocus = false }) {
   const [text, setText] = useState("");
+  const [isFocused, setIsFocused] = useState(true);
+  const inputRef = useRef(null);
 
   function updateText(changedText) {
     setText(changedText);
+  }
+
+  function handleBlur() {
+    setIsFocused(false);
+  }
+
+  function handleFocus() {
+    setIsFocused(true);
   }
 
   return (
@@ -16,7 +26,20 @@ export default function Input() {
         style={{ borderBottomColor: "purple", borderBottomWidth: 2 }}
         value={text}
         onChangeText={updateText}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
       />
+      {isFocused && text.length > 0 && (
+        <Text>Character count: {text.length}</Text>
+      )}
+      {!isFocused && (
+        <Text>
+          {text.length >= 3
+            ? "Thank you"
+            : "Please type more than 3 characters"}
+        </Text>
+      )}
+
     </View>
   );
 }
