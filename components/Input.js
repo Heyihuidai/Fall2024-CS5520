@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, TextInput } from 'react-native';
 
 export default function Input({ autoFocus = false }) {
