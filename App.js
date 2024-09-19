@@ -1,14 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
 import Header from './components/Header';
 import Input from './components/Input';
-import { useState } from 'react';
 
 export default function App() {
   const appName = "MyAwesomeApp";
   const [autoFocus, setAutoFocus] = useState(true);
-  const [inputData, setInputData] = useState('')
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inputData, setInputData] = useState('')
 
   const handleInputData = (data) => {
     setInputData(data);
@@ -16,17 +15,22 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Header name={appName}/>
-      <Button title="Add a goal" onPress={() => setIsModalVisible(true)} />
-      <Input 
-        autoFocus={autoFocus} 
-        onInputSubmit={handleInputData} 
-        visible={isModalVisible}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Welcome to {appName}</Text>
+      </View>
+      <Button
+        title="Add a goal"
+        onPress={() => setIsModalVisible(true)}
+        color="#007AFF"
       />
-      <Text>Received data: {inputData}</Text>
-    </View>
+      <Input 
+        autoFocus={autoFocus}
+        visible={isModalVisible}
+        onInputSubmit={handleInputData}
+      />
+      {inputData ? <Text style={styles.goalText}>{inputData}</Text> : null}
+    </SafeAreaView>
   );
 }
 
@@ -34,7 +38,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  header: {
+    borderColor: 'purple',
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 18,
+    color: 'purple',
+    textAlign: 'center',
+  },
+  goalText: {
+    fontSize: 16,
+    color: 'purple',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
