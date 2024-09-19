@@ -68,24 +68,18 @@ export default function Input({ autoFocus = false, visible, onInputSubmit }) {
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 20,
+      justifyContent: 'center', 
     },
     input: {
       borderColor: "purple",
-      borderWidth: 1,
-      borderRadius: 5,
-      width: '100%',
-      padding: 10,
-      marginBottom: 20,
-      fontSize: 16,
+      borderWidth: 2,
+      padding: 5,
+      color:"blue",
     },
     buttonContainer: {
-      width: windowWidth * 0.3,
-      marginVertical: 10,
+      width: windowWidth * 0.6,
+      marginVertical: 15,
+      backgroundColor: 'red',
     },
   });
   
