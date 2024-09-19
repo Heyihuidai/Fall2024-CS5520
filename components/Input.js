@@ -54,20 +54,11 @@ export default function Input({ autoFocus = false, visible, onInputSubmit }) {
           onBlur={handleBlur}
           onFocus={handleFocus}
         />
-        {isFocused && text.length > 0 && (
-          <Text style={styles.characterCount}>Character count: {text.length}</Text>
-        )}
-        {!isFocused && (
-          <Text style={styles.instruction}>
-            {text.length >= 3
-              ? "Thank you"
-              : "Please type more than 3 characters"}
-          </Text>
-        )}
         <View style={styles.buttonContainer}>
-        <Button
-          title="Confirm"
-          onPress={handleConfirm}
+          <Button
+            title="Confirm"
+            onPress={handleConfirm}
+            color="#007AFF"
           />
         </View>
       </View>
@@ -83,12 +74,6 @@ export default function Input({ autoFocus = false, visible, onInputSubmit }) {
       justifyContent: 'center',
       padding: 20,
     },
-    label: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 10,
-      color: '#333',
-    },
     input: {
       borderColor: "purple",
       borderWidth: 1,
@@ -98,19 +83,9 @@ export default function Input({ autoFocus = false, visible, onInputSubmit }) {
       marginBottom: 20,
       fontSize: 16,
     },
-    characterCount: {
-      fontSize: 14,
-      color: '#666',
-      marginBottom: 10,
-    },
-    instruction: {
-      fontSize: 16,
-      color: '#333',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
     buttonContainer: {
       width: windowWidth * 0.3,
       marginVertical: 10,
     },
   });
+  
