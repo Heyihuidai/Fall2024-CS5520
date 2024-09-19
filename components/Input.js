@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 
 export default function Input({ autoFocus = false }) {
   const [text, setText] = useState("");
@@ -24,6 +24,14 @@ export default function Input({ autoFocus = false }) {
     setIsFocused(true);
   }
 
+  function handleConfirm() {
+    if (text.length >= 3) {
+      Alert.alert("Confirmation", "Thank you for your input!");
+    } else {
+      Alert.alert("Error", "Please type more than 3 characters");
+    }
+  }
+
   return (
     <View>
       <TextInput
@@ -45,7 +53,10 @@ export default function Input({ autoFocus = false }) {
             : "Please type more than 3 characters"}
         </Text>
       )}
-
+      <Button
+        title="Confirm"
+        onPress={handleConfirm}
+      />
     </View>
   );
 }
