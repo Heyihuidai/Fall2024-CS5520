@@ -1,60 +1,31 @@
-import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, Button, Alert, Modal, StyleSheet, Dimensions } from 'react-native';
+import React, { useState } from "react";
+import { View, TextInput, Button, Modal, StyleSheet } from 'react-native';
 
-const windowWidth = Dimensions.get('window').width;
-
-export default function Input({ autoFocus = false, visible, onInputSubmit }) {
+export default function Input({ visible, onInputSubmit, onCancel }) {
   const [text, setText] = useState("");
-  const [isFocused, setIsFocused] = useState(autoFocus);
-  const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (autoFocus && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [autoFocus]);
-
-  function updateText(changedText) {
-    setText(changedText);
-  }
-
-  function handleBlur() {
-    setIsFocused(false);
-  }
-
-  function handleFocus() {
-    setIsFocused(true);
-  }
-
-  function handleConfirm() {
-    if (text.length >= 3) {
-      Alert.alert("Confirmation", "Thank you for your input!");
+  const handleConfirm = () => {
+    if (text.trim().length > 0) {
       onInputSubmit(text);
-      setText(""); 
-    } else {
-      Alert.alert("Error", "Please type more than 3 characters");
+      setText("");
     }
-  }
+  };
 
   return (
     <Modal
       visible={visible}
       animationType="slide"
       transparent={true}
+      onRequestClose={onCancel}
     >
-      <View style={styles.container}>
-        <Text style={styles.label}>Enter your goal:</Text>
-        <TextInput
-          ref={inputRef}
-          placeholder="Type something"
-          keyboardType="default"
-          style={styles.input}
-          value={text}
-          onChangeText={updateText}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-        />
-        <View style={styles.buttonContainer}>
+      <View style={styles.modalContainer}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Enter your goal"
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+          />
           <Button
             title="Confirm"
             onPress={handleConfirm}
@@ -62,24 +33,31 @@ export default function Input({ autoFocus = false, visible, onInputSubmit }) {
           />
         </View>
       </View>
-     </Modal>
-    );
-  } 
+    </Modal>
+  );
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center', 
-    },
-    input: {
-      borderColor: "purple",
-      borderWidth: 2,
-      padding: 5,
-      color:"blue",
-    },
-    buttonContainer: {
-      width: windowWidth * 0.6,
-      marginVertical: 15,
-      backgroundColor: 'red',
-    },
-  });
-  
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  inputContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  input: {
+    borderColor: "purple",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    fontSize: 16,
+    marginBottom: 20,
+  },
+});
