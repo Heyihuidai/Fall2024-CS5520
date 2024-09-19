@@ -11,6 +11,10 @@ export default function App() {
     setIsModalVisible(false);
   };
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -31,7 +35,7 @@ export default function App() {
       <Input 
         visible={isModalVisible}
         onInputSubmit={handleAddGoal}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={handleCancel}
       />
     </SafeAreaView>
   );
