@@ -1,22 +1,63 @@
 import React, { useState } from "react";
-import { View, TextInput } from 'react-native';
+import { View, TextInput, Button, Modal, StyleSheet } from 'react-native';
 
-export default function Input() {
+export default function Input({ visible, onInputSubmit, onCancel }) {
   const [text, setText] = useState("");
 
-  function updateText(changedText) {
-    setText(changedText);
-  }
+  const handleConfirm = () => {
+    if (text.trim().length > 0) {
+      onInputSubmit(text);
+      setText("");
+    }
+  };
 
   return (
-    <View>
-      <TextInput
-        placeholder="Type something"
-        keyboardType="default"
-        style={{ borderBottomColor: "purple", borderBottomWidth: 2 }}
-        value={text}
-        onChangeText={updateText}
-      />
-    </View>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onCancel}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Enter your goal"
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+          />
+          <Button
+            title="Confirm"
+            onPress={handleConfirm}
+            color="#007AFF"
+          />
+        </View>
+      </View>
+    </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  inputContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  input: {
+    borderColor: "purple",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    fontSize: 16,
+    marginBottom: 20,
+  },
+});
