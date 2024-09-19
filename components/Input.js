@@ -27,6 +27,7 @@ export default function Input({ autoFocus = false }) {
   function handleConfirm() {
     if (text.length >= 3) {
       Alert.alert("Confirmation", "Thank you for your input!");
+      onInputSubmit(text);
     } else {
       Alert.alert("Error", "Please type more than 3 characters");
     }
@@ -35,6 +36,7 @@ export default function Input({ autoFocus = false }) {
   return (
     <View>
       <TextInput
+        ref={inputRef}
         placeholder="Type something"
         keyboardType="default"
         style={{ borderBottomColor: "purple", borderBottomWidth: 2 }}
