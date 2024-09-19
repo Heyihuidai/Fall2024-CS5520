@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function Header({app_name}) {
+export default function Header({name, children}) {
   return (
     <View>
-      <Text>Welcome to {app_name}!</Text>
+      <Text>Welcome to {name}!</Text>
+      {children}
     </View>
   )
 }
