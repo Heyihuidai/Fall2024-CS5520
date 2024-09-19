@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, Alert, Modal, StyleSheet, Dimensions } f
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Input({ autoFocus = false }) {
+export default function Input({ autoFocus = false, visible, onInputSubmit }) {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(autoFocus);
   const inputRef = useRef(null);
@@ -55,7 +55,7 @@ export default function Input({ autoFocus = false }) {
           onFocus={handleFocus}
         />
         {isFocused && text.length > 0 && (
-          <Text>Character count: {text.length}</Text>
+          <Text style={styles.characterCount}>Character count: {text.length}</Text>
         )}
         {!isFocused && (
           <Text style={styles.instruction}>
