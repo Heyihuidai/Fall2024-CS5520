@@ -1,36 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
-import Header from './components/Header';
 import Input from './components/Input';
 
 export default function App() {
-  const appName = "MyAwesomeApp";
-  const [autoFocus, setAutoFocus] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [inputData, setInputData] = useState('')
+  const [goals, setGoals] = useState(['Study', 'Work', 'Exercise']);
 
-  const handleInputData = (data) => {
-    setInputData(data);
-    setIsModalVisible(false); 
+  const handleAddGoal = (goal) => {
+    setGoals(currentGoals => [...currentGoals, goal]);
+    setIsModalVisible(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome to {appName}</Text>
+      <View style={styles.topView}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Welcome to My awesome app</Text>
+        </View>
+        <Button
+          title="Add a goal"
+          onPress={() => setIsModalVisible(true)}
+          color="#007AFF"
+        />
       </View>
-      <Button
-        title="Add a goal"
-        onPress={() => setIsModalVisible(true)}
-        color="#007AFF"
-      />
+      <View style={styles.bottomView}>
+        {goals.map((goal, index) => (
+          <Text key={index} style={styles.goalText}>{goal}</Text>
+        ))}
+      </View>
       <Input 
-        autoFocus={autoFocus}
         visible={isModalVisible}
-        onInputSubmit={handleInputData}
+        onInputSubmit={handleAddGoal}
+        onCancel={() => setIsModalVisible(false)}
       />
-      {inputData ? <Text style={styles.goalText}>{inputData}</Text> : null}
     </SafeAreaView>
   );
 }
@@ -40,21 +42,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  topView: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
   header: {
     borderColor: 'purple',
     borderWidth: 1,
     padding: 10,
-    marginBottom: 20,
+    width: '90%',
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 18,
     color: 'purple',
-    textAlign: 'center',
+  },
+  bottomView: {
+    flex: 4,
+    backgroundColor: '#E6E6FA',
+    width: '100%',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   goalText: {
-    fontSize: 16,
-    color: 'purple',
+    fontSize: 18,
+    color: 'blue',
+    marginBottom: 10,
     textAlign: 'center',
-    marginTop: 20,
   },
 });
