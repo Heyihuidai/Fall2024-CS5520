@@ -8,16 +8,23 @@ export default function App() {
   const appName = "MyAwesomeApp";
   const [autoFocus, setAutoFocus] = useState(true);
   const [inputData, setInputData] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleInputData = (data) => {
     setInputData(data);
+    setIsModalVisible(false); 
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Header name={appName}/>
-      <Input autoFocus={autoFocus} onInputSubmit={handleInputData} />
+      <Button title="Add a goal" onPress={() => setIsModalVisible(true)} />
+      <Input 
+        autoFocus={autoFocus} 
+        onInputSubmit={handleInputData} 
+        visible={isModalVisible}
+      />
       <Text>Received data: {inputData}</Text>
     </View>
   );
