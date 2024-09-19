@@ -9,7 +9,20 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
       onInputSubmit(text);
       setText("");
     }
-  };
+  
+  const handleCancel = () => {
+    Alert.alert(
+      "Cancel",
+      "Are you sure you want to cancel?",
+      [
+        { text: "No", style: "cancel" },
+        { text: "Yes", onPress: () => {
+          setText("");
+          onCancel();
+        }}
+      ]
+    );
+  }; 
 
   return (
     <Modal
