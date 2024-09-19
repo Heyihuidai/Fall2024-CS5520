@@ -17,7 +17,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Header name={appName}/>
-      <Input autoFocus={autoFocus} />
+      <Input autoFocus={autoFocus} onInputSubmit={handleInputData} />
       <Text>Received data: {inputData}</Text>
     </View>
   );
