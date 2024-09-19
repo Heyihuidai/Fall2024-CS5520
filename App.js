@@ -7,12 +7,18 @@ import { useState } from 'react';
 export default function App() {
   const appName = "MyAwesomeApp";
   const [autoFocus, setAutoFocus] = useState(true);
+  const [inputData, setInputData] = useState('')
+
+  const handleInputData = (data) => {
+    setInputData(data);
+  };
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Header name={appName}/>
       <Input autoFocus={autoFocus} />
+      <Text>Received data: {inputData}</Text>
     </View>
   );
 }
