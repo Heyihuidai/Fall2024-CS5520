@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Modal, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Modal, StyleSheet, Alert, Image } from 'react-native';
 
 export default function Input({ visible, onInputSubmit, onCancel }) {
   const [text, setText] = useState("");
@@ -9,6 +9,7 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
       onInputSubmit(text);
       setText("");
     }
+  };
   
   const handleCancel = () => {
     Alert.alert(
@@ -39,6 +40,7 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
             value={text}
             onChangeText={setText}
           />
+        <View style={styles.buttonContainer}>
           <Button
             title="Confirm"
             onPress={handleConfirm}
@@ -46,7 +48,8 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
           />
         </View>
       </View>
-    </Modal>
+    </View>
+   </Modal>
   );
 }
 
@@ -72,5 +75,10 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 16,
     marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
 });
