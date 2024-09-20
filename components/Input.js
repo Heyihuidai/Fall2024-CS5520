@@ -45,6 +45,7 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
             title="Confirm"
             onPress={handleConfirm}
             color="#007AFF"
+            disabled={text.trim().length < 3}
           />
         </View>
       </View>
