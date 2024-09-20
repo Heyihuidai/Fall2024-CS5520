@@ -17,10 +17,12 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
       "Are you sure you want to cancel?",
       [
         { text: "No", style: "cancel" },
-        { text: "Yes", onPress: () => {
-          setText("");
-          onCancel();
-        }}
+        { text: "Yes", 
+          onPress: () => {
+            setText("");
+            onCancel();
+          }
+        }
       ]
     );
   }; 
@@ -50,23 +52,23 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
             value={text}
             onChangeText={setText}
           />
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Cancel"
-            onPress={handleCancel}
-            color="#007AFF"
-          />
-          <Button
-            title="Confirm"
-            onPress={handleConfirm}
-            color="#007AFF"
-            disabled={text.trim().length < 3}
-          />
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Cancel"
+              onPress={handleCancel}
+              color="#007AFF"
+            />
+            <Button
+              title="Confirm"
+              onPress={handleConfirm}
+              color="#007AFF"
+              disabled={text.trim().length < 3}
+            />
+          </View>
         </View>
       </View>
-    </View>
-  </Modal>
- );
+    </Modal>
+  );
 }
 
 const styles = StyleSheet.create({
