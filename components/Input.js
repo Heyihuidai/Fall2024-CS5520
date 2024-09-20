@@ -34,6 +34,16 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
     >
       <View style={styles.modalContainer}>
         <View style={styles.inputContainer}>
+        <Image 
+          source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
+          style={styles.image}
+          accessibilityLabel="Network image of a goal icon"
+        />
+        <Image 
+        source={require('./image_lab2.png')}
+        style={styles.image}
+        accessibilityLabel="Local image of a goal icon"
+        />
           <TextInput
             placeholder="Enter your goal"
             style={styles.input}
