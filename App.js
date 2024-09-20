@@ -1,39 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from './components/Input';
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
 
-  useEffect(() => {
-    loadGoals();
-  }, []);
-
-  const loadGoals = async () => {
-    try {
-      const storedGoals = await AsyncStorage.getItem('goals');
-      if (storedGoals !== null) {
-        setGoals(JSON.parse(storedGoals));
-      }
-    } catch (error) {
-      console.error('Error loading goals:', error);
-    }
-  };
-
-  const saveGoals = async (newGoals) => {
-    try {
-      await AsyncStorage.setItem('goals', JSON.stringify(newGoals));
-    } catch (error) {
-      console.error('Error saving goals:', error);
-    }
-  };
-
   const handleAddGoal = (goal) => {
-    const newGoals = [...goals, goal];
-    setGoals(newGoals);
-    saveGoals(newGoals);
+    setGoals(currentGoals => [...currentGoals, goal]);
     setIsModalVisible(false);
   };
 
