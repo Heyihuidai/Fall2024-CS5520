@@ -36,15 +36,13 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
     >
       <View style={styles.modalContainer}>
         <View style={styles.inputContainer}>
-          <Text>Network Image Should Be Here</Text>
           <Image 
             source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
             style={styles.image}
             accessibilityLabel="Network image of a goal icon"
           />
-          <Text>Local Image Should Be Here</Text>
           <Image 
-            source={require('../assets/image_lab2.png')}
+            source={require('/Users/shuojun/SampleProject/image_lab2.png')}
             style={styles.image}
             accessibilityLabel="Local image of a goal icon"
           />
