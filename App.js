@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
 import Input from './components/Input';
-import localImage from './assets/image_lab2.png'
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -16,6 +15,14 @@ export default function App() {
     setIsModalVisible(false);
   }
 
+  function handleGoalDelete(deletedId) {
+    setGoals((prevGoals) => {
+      return prevGoals.filter((goalObj) => {
+        return goalObj.id != deletedId;
+      });
+    });
+  }
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -23,6 +30,12 @@ export default function App() {
   const renderGoalItem = ({ item }) => (
     <View style={styles.textContainer}>
       <Text style={styles.goalText}>{item.text}</Text>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleGoalDelete(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -31,16 +44,6 @@ export default function App() {
       <View style={styles.topView}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Welcome to My awesome app</Text>
-        </View>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' }}
-            style={styles.image}
-          />
-          <Image
-            source={localImage}
-            style={styles.image}
-          />
         </View>
         <Button
           title="Add a goal"
@@ -97,7 +100,6 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     flex: 1,
-    backgroundColor: '#dcd',
     width: '100%',
   },
   listContent: {
