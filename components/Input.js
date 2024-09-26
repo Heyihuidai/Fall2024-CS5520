@@ -39,12 +39,12 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
           <Image 
             source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
             style={styles.image}
-            accessibilityLabel="Network image of a goal icon"
+            alt="Network image of a goal icon"
           />
           <Image 
-            source={require('/Users/shuojun/SampleProject/image_lab2.png')}
+            source={require('../assets/image_lab2.png')}
             style={styles.image}
-            accessibilityLabel="Local image of a goal icon"
+            alt="Local image of a goal icon"
           />
           <TextInput
             placeholder="Enter your goal"
