@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, FlatList } from 'react-native';
 import Input from './components/Input';
+import localImage from './assets/image_lab2.png'
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,6 +31,16 @@ export default function App() {
       <View style={styles.topView}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Welcome to My awesome app</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' }}
+            style={styles.image}
+          />
+          <Image
+            source={localImage}
+            style={styles.image}
+          />
         </View>
         <Button
           title="Add a goal"
