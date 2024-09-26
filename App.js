@@ -7,23 +7,23 @@ export default function App() {
   const [goals, setGoals] = useState([]);
   const [receivedData, setReceivedData] = useState("");
 
-  const renderGoalItem = ({ item }) => (
-    <View style={styles.goalItem}>
-      <Text style={styles.goalText}>{item.text}</Text>
-    </View>
-  );
-
   function handleAddGoal(data) {
     console.log("App.js ", data);
     let newGoal = { text: data, id: Math.random().toString() };
     setGoals((prevGoals) => [...prevGoals, newGoal]);
-    setReceivedData(data);  // Set the received data
+    setReceivedData(data);
     setIsModalVisible(false);
   }
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const renderGoalItem = ({ item }) => (
+    <View style={styles.textContainer}>
+      <Text style={styles.goalText}>{item.text}</Text>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,12 +93,15 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
-  goalItem: {
+  textContainer: {
+    backgroundColor: '#aaa',
+    borderRadius: 10,
+    padding: 10,
     marginBottom: 10,
-    alignItems: 'center',
+    width: '100%',
   },
   goalText: {
-    fontSize: 35,
+    fontSize: 18,
     color: 'blue',
     textAlign: 'center',
   },
