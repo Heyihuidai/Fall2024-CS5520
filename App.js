@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView } from 'react-native';
 import Input from './components/Input';
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
 
-  function handleInputData(data) {
+  function handleAddGoal(data) {
     console.log("App.js ", data);
-    let newGoal = { text: data, id: Math.random() };
-    //make a new obj and store the received data as the obj's text property
-    setGoals((prevGoals) => {
-      return [...prevGoals, newGoal];
-    });
-    // setReceivedData(data);
+    let newGoal = { text: data, id: Math.random().toString() };
+    setGoals((prevGoals) => [...prevGoals, newGoal]);
     setIsModalVisible(false);
   }
 
@@ -33,11 +29,13 @@ export default function App() {
           color="#007AFF"
         />
       </View>
-      <View style={styles.bottomView}>
-        {goals.map((goal, index) => (
-          <Text key={index} style={styles.goalText}>{goal}</Text>
+      <ScrollView style={styles.bottomView}>
+        {goals.map((goal) => (
+          <View key={goal.id} style={styles.goalItem}>
+            <Text style={styles.goalText}>{goal.text}</Text>
+          </View>
         ))}
-      </View>
+      </ScrollView>
       <Input
         visible={isModalVisible}
         onInputSubmit={handleAddGoal}
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   topView: {
-    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
@@ -64,23 +61,25 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '90%',
     alignItems: 'center',
+    marginBottom: 20,
   },
   headerText: {
     fontSize: 18,
     color: 'purple',
   },
   bottomView: {
-    flex: 4,
+    flex: 1,
     backgroundColor: '#E6E6FA',
     width: '100%',
     padding: 20,
+  },
+  goalItem: {
+    marginBottom: 10,
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   goalText: {
     fontSize: 18,
     color: 'blue',
-    marginBottom: 10,
     textAlign: 'center',
   },
 });
