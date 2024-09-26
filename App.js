@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, FlatList } from 'react-native';
 import Input from './components/Input';
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+
+  const renderGoalItem = ({ item }) => (
+    <View style={styles.goalItem}>
+      <Text style={styles.goalText}>{item.text}</Text>
+    </View>
+  );
 
   function handleAddGoal(data) {
     console.log("App.js ", data);
@@ -29,13 +35,13 @@ export default function App() {
           color="#007AFF"
         />
       </View>
-      <ScrollView style={styles.bottomView}>
-        {goals.map((goal) => (
-          <View key={goal.id} style={styles.goalItem}>
-            <Text style={styles.goalText}>{goal.text}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      <FlatList
+        style={styles.bottomView}
+        contentContainerStyle={styles.listContent}
+        data={goals}
+        renderItem={renderGoalItem}
+        keyExtractor={item => item.id}
+      />
       <Input
         visible={isModalVisible}
         onInputSubmit={handleAddGoal}
@@ -69,16 +75,19 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     flex: 1,
-    backgroundColor: '#E6E6FA',
+    backgroundColor: '#dcd',
     width: '100%',
+  },
+  listContent: {
     padding: 20,
+    alignItems: 'center',
   },
   goalItem: {
     marginBottom: 10,
     alignItems: 'center',
   },
   goalText: {
-    fontSize: 18,
+    fontSize: 35,
     color: 'blue',
     textAlign: 'center',
   },
