@@ -6,10 +6,16 @@ export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
 
-  const handleAddGoal = (goal) => {
-    setGoals(currentGoals => [...currentGoals, goal]);
+  function handleInputData(data) {
+    console.log("App.js ", data);
+    let newGoal = { text: data, id: Math.random() };
+    //make a new obj and store the received data as the obj's text property
+    setGoals((prevGoals) => {
+      return [...prevGoals, newGoal];
+    });
+    // setReceivedData(data);
     setIsModalVisible(false);
-  };
+  }
 
   const handleCancel = () => {
     setIsModalVisible(false);
