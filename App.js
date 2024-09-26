@@ -5,6 +5,7 @@ import Input from './components/Input';
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+  const [receivedData, setReceivedData] = useState("");
 
   const renderGoalItem = ({ item }) => (
     <View style={styles.goalItem}>
@@ -16,6 +17,7 @@ export default function App() {
     console.log("App.js ", data);
     let newGoal = { text: data, id: Math.random().toString() };
     setGoals((prevGoals) => [...prevGoals, newGoal]);
+    setReceivedData(data);  // Set the received data
     setIsModalVisible(false);
   }
 
@@ -35,6 +37,9 @@ export default function App() {
           color="#007AFF"
         />
       </View>
+      {receivedData ? (
+        <Text style={styles.receivedDataText}>Last added goal: {receivedData}</Text>
+      ) : null}
       <FlatList
         style={styles.bottomView}
         contentContainerStyle={styles.listContent}
@@ -72,6 +77,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     color: 'purple',
+  },
+  receivedDataText: {
+    fontSize: 16,
+    color: 'green',
+    textAlign: 'center',
+    marginBottom: 10,
   },
   bottomView: {
     flex: 1,
