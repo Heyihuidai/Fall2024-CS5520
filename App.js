@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   bottomView: {
     flex: 1,
     width: '100%',
+    backgroundColor: '#E6E6FA',
   },
   listContent: {
     padding: 20,
