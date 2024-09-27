@@ -5,13 +5,11 @@ import Input from './components/Input';
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
-  const [receivedData, setReceivedData] = useState("");
 
   function handleAddGoal(data) {
     console.log("App.js ", data);
     let newGoal = { text: data, id: Math.random().toString() };
     setGoals((prevGoals) => [...prevGoals, newGoal]);
-    setReceivedData(data);
     setIsModalVisible(false);
   }
 
@@ -43,6 +41,10 @@ export default function App() {
     <Text style={styles.emptyListText}>No goals to show</Text>
   );
 
+  const renderHeader = () => (
+    <Text style={styles.listHeaderText}>My Goals</Text>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -55,9 +57,6 @@ export default function App() {
           color="#007AFF"
         />
       </View>
-      {receivedData ? (
-        <Text style={styles.receivedDataText}>Last added goal: {receivedData}</Text>
-      ) : null}
       <FlatList
         style={styles.bottomView}
         contentContainerStyle={styles.listContent}
@@ -65,6 +64,7 @@ export default function App() {
         renderItem={renderGoalItem}
         keyExtractor={item => item.id}
         ListEmptyComponent={renderEmptyList}
+        ListHeaderComponent={goals.length > 0 ? renderHeader : null}
       />
       <Input
         visible={isModalVisible}
@@ -97,12 +97,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'purple',
   },
-  receivedDataText: {
-    fontSize: 16,
-    color: 'green',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
   bottomView: {
     flex: 1,
     width: '100%',
@@ -127,5 +121,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'gray',
     textAlign: 'center',
+  },
+  listHeaderText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'purple',
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
