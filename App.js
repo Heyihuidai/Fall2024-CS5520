@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TouchableOpacity, Alert} from 'react-native';
 import Input from './components/Input';
+import GoalItem from "./components/GoalItem";
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -43,15 +44,10 @@ export default function App() {
   };
 
   const renderGoalItem = ({ item }) => (
-    <View style={styles.textContainer}>
-      <Text style={styles.goalText}>{item.text}</Text>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleGoalDelete(item.id)}
-      >
-        <Text style={styles.deleteButtonText}>Delete</Text>
-      </TouchableOpacity>
-    </View>
+    <GoalItem
+      goalObj={item}
+      handleDelete={handleGoalDelete}
+    />
   );
 
   const renderEmptyList = () => (
@@ -136,18 +132,6 @@ const styles = StyleSheet.create({
   listContent: {
     padding: 20,
     alignItems: 'center',
-  },
-  textContainer: {
-    backgroundColor: '#aaa',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    width: '100%',
-  },
-  goalText: {
-    fontSize: 18,
-    color: 'blue',
-    textAlign: 'center',
   },
   emptyListText: {
     fontSize: 18,
