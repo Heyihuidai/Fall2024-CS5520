@@ -72,6 +72,8 @@ export default function App() {
     </View>
   );
 
+  const ItemSeparatorComponent = () => <View style={styles.separator} />;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -93,6 +95,7 @@ export default function App() {
         ListEmptyComponent={renderEmptyList}
         ListHeaderComponent={goals.length > 0 ? renderHeader : null}
         ListFooterComponent={goals.length > 0 ? renderFooter : null}
+        ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Input
         visible={isModalVisible}
@@ -160,5 +163,10 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 20,
     width: '100%',
+  },
+  separator: {
+    height: 3,
+    backgroundColor: '#CCCCCC',
+    marginVertical: 5,
   },
 });
