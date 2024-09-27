@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TouchableOpacity, Alert} from 'react-native';
 import Input from './components/Input';
 
 export default function App() {
@@ -19,6 +19,23 @@ export default function App() {
         return goalObj.id != deletedId;
       });
     });
+  }
+
+  function handleDeleteAll() {
+    Alert.alert(
+      "Delete All Goals",
+      "Are you sure you want to delete all goals?",
+      [
+        {
+          text: "No",
+          style: "cancel"
+        },
+        { 
+          text: "Yes", 
+          onPress: () => setGoals([])
+        }
+      ]
+    );
   }
 
   const handleCancel = () => {
@@ -45,6 +62,16 @@ export default function App() {
     <Text style={styles.listHeaderText}>My Goals</Text>
   );
 
+  const renderFooter = () => (
+    <View style={styles.footer}>
+      <Button
+        title="Delete All"
+        onPress={handleDeleteAll}
+        color="#FF3B30"
+      />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -65,6 +92,7 @@ export default function App() {
         keyExtractor={item => item.id}
         ListEmptyComponent={renderEmptyList}
         ListHeaderComponent={goals.length > 0 ? renderHeader : null}
+        ListFooterComponent={goals.length > 0 ? renderFooter : null}
       />
       <Input
         visible={isModalVisible}
@@ -128,5 +156,9 @@ const styles = StyleSheet.create({
     color: 'purple',
     textAlign: 'center',
     marginBottom: 10,
+  },
+  footer: {
+    marginTop: 20,
+    width: '100%',
   },
 });
