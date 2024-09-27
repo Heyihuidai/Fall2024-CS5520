@@ -39,6 +39,10 @@ export default function App() {
     </View>
   );
 
+  const renderEmptyList = () => (
+    <Text style={styles.emptyListText}>No goals to show</Text>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -60,6 +64,7 @@ export default function App() {
         data={goals}
         renderItem={renderGoalItem}
         keyExtractor={item => item.id}
+        ListEmptyComponent={renderEmptyList}
       />
       <Input
         visible={isModalVisible}
@@ -116,6 +121,11 @@ const styles = StyleSheet.create({
   goalText: {
     fontSize: 18,
     color: 'blue',
+    textAlign: 'center',
+  },
+  emptyListText: {
+    fontSize: 18,
+    color: 'gray',
     textAlign: 'center',
   },
 });
