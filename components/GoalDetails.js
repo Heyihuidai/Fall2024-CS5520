@@ -1,40 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 
-export default function GoalDetails({ navigation, route }) {
-  const [warning, setWarning] = useState(false);
-
-  function warningHandler() {
-    setWarning(true);
-    navigation.setOptions({ title: "Warning!" });
-  }
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={warningHandler} style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Warning</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
+export default function GoalDetails({ route }) {
+  const { goalObj } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {route.params ? (
-          <Text style={[styles.detailText, warning && styles.warningStyle]}>
-            Details of "{route.params.goalObj.text}" goal with ID: {route.params.goalObj.id}
-          </Text>
-        ) : (
-          <Text style={styles.detailText}>No goal details available</Text>
-        )}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.push("Details")}
-        >
-          <Text style={styles.buttonText}>More Details</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>Goal Details</Text>
+        <Text style={styles.detailText}>Goal: {goalObj.text}</Text>
+        <Text style={styles.detailText}>ID: {goalObj.id}</Text>
       </View>
     </SafeAreaView>
   );
@@ -51,29 +26,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  detailText: {
-    fontSize: 18,
-    textAlign: 'center',
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  warningStyle: {
-    color: 'red',
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  headerButton: {
-    marginRight: 10,
-  },
-  headerButtonText: {
-    color: '#007AFF',
-    fontSize: 16,
+  detailText: {
+    fontSize: 18,
+    marginBottom: 10,
   },
 });

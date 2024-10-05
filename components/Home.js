@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
 import { StatusBar } from "expo-status-bar";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
