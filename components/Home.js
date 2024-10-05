@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
             <GoalItem
               goalObj={item}
               handleDelete={goalDeleteHandler}
-              navigateToDetails={navigateToDetails}
+              navigateToDetails={(goalObj) => navigation.navigate('Details', { goalObj })}
             />
           )}
           ListEmptyComponent={
