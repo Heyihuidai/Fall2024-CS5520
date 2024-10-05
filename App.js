@@ -14,7 +14,7 @@ export default function App() {
           name="Home" 
           component={Home}
           options={{
-            title: 'My Awesome App',
+            title: 'All My Goals',
             headerStyle: {
               backgroundColor: '#8a2be2',
             },
@@ -27,7 +27,16 @@ export default function App() {
         <Stack.Screen 
           name="Details" 
           component={GoalDetails}
-          options={{ title: 'Goal Details' }}
+          options={({ route }) => ({
+            title: route.params.goalObj.text,
+            headerStyle: {
+              backgroundColor: '#8a2be2',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
