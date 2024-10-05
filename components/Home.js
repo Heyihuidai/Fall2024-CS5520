@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
+import { Text, View, SafeAreaView, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { StatusBar } from "expo-status-bar";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
+import sharedStyles from '../styles/sharedStyles.js';
 
 export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,15 +28,15 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={sharedStyles.container}>
       <StatusBar style="auto" />
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome to My awesome app</Text>
+      <View style={sharedStyles.content}>
+        <Text style={sharedStyles.title}>Welcome to My awesome app</Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={[sharedStyles.button, styles.addButton]}
           onPress={() => setIsModalVisible(true)}
         >
-          <Text style={styles.addButtonText}>ADD A GOAL</Text>
+          <Text style={sharedStyles.buttonText}>ADD A GOAL</Text>
         </TouchableOpacity>
         <FlatList
           style={styles.list}
@@ -63,32 +64,8 @@ export default function Home({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#8a2be2',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
   addButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
     marginBottom: 20,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
   },
   list: {
     width: '100%',
