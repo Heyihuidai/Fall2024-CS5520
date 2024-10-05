@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Modal, StyleSheet, Alert, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity, Modal, StyleSheet, Alert, Image, Text } from 'react-native';
 
 export default function Input({ visible, onInputSubmit, onCancel }) {
   const [text, setText] = useState("");
@@ -12,20 +12,9 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
   };
   
   const handleCancel = () => {
-    Alert.alert(
-      "Cancel",
-      "Are you sure you want to cancel?",
-      [
-        { text: "No", style: "cancel" },
-        { text: "Yes", 
-          onPress: () => {
-            setText("");
-            onCancel();
-          }
-        }
-      ]
-    );
-  }; 
+    setText("");
+    onCancel();
+  };
 
   return (
     <Modal
@@ -37,14 +26,13 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
       <View style={styles.modalContainer}>
         <View style={styles.inputContainer}>
           <Image 
-            source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
-            style={styles.image}
-            alt="Network image of a goal icon"
+          source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
+          style={styles.image}
+          lt="Network image of a goal icon"
           />
           <Image 
             source={require('../assets/image_lab2.png')}
             style={styles.image}
-            alt="Local image of a goal icon"
           />
           <TextInput
             placeholder="Enter your goal"
@@ -53,17 +41,15 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
             onChangeText={setText}
           />
           <View style={styles.buttonContainer}>
-            <Button
-              title="Cancel"
-              onPress={handleCancel}
-              color="#007AFF"
-            />
-            <Button
-              title="Confirm"
-              onPress={handleConfirm}
-              color="#007AFF"
-              disabled={text.trim().length < 3}
-            />
+            <TouchableOpacity onPress={handleCancel} style={styles.button}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={handleConfirm} 
+              style={[styles.button, styles.confirmButton]}
+            >
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -99,9 +85,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    width: '45%',
+    alignItems: 'center',
+  },
+  confirmButton: {
+    backgroundColor: '#007AFF',
+  },
+  buttonText: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
   image: {
     width: 100,
     height: 100,
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });

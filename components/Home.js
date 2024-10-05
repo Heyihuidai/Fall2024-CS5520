@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
             <GoalItem
               goalObj={item}
               handleDelete={goalDeleteHandler}
-              navigateToDetails={(goalObj) => navigation.navigate('Details', { goalObj })}
+              navigateToDetails={navigateToDetails}
             />
           )}
           ListEmptyComponent={
@@ -61,7 +61,7 @@ export default function Home({ navigation }) {
         />
       </View>
       <Input
-        modalVisible={isModalVisible}
+        visible={isModalVisible}
         onInputSubmit={handleInputData}
         onCancel={dismissModal}
       />
@@ -99,23 +99,6 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-  },
-  goalItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#ddd',
-    padding: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  goalText: {
-    fontSize: 16,
-  },
-  deleteText: {
-    color: '#FF3B30',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   emptyText: {
     textAlign: 'center',
