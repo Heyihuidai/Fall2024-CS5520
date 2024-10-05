@@ -1,68 +1,65 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
-import Input from './Input';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import Input from "./Input";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
-  const [receivedData, setReceivedData] = useState("");
 
-  function handleAddGoal(data) {
-    console.log("Home.js ", data);
+  function handleInputData(data) {
     let newGoal = { text: data, id: Math.random().toString() };
-    setGoals((prevGoals) => [...prevGoals, newGoal]);
-    setReceivedData(data);
+    setGoals(prevGoals => [...prevGoals, newGoal]);
     setIsModalVisible(false);
   }
 
-  function handleGoalDelete(deletedId) {
-    setGoals((prevGoals) => {
-      return prevGoals.filter((goalObj) => goalObj.id !== deletedId);
-    });
+  function dismissModal() {
+    setIsModalVisible(false);
   }
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const renderGoalItem = ({ item }) => (
-    <View style={styles.textContainer}>
-      <Text style={styles.goalText}>{item.text}</Text>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleGoalDelete(item.id)}
-      >
-        <Text style={styles.deleteButtonText}>Delete</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  function goalDeleteHandler(deletedId) {
+    setGoals(prevGoals => prevGoals.filter(goal => goal.id !== deletedId));
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.topView}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Welcome to My awesome app</Text>
-        </View>
-        <Button
-          title="Add a goal"
+      <StatusBar style="auto" />
+      <View style={styles.content}>
+        <Text style={styles.title}>Welcome to My awesome app</Text>
+        <TouchableOpacity
+          style={styles.addButton}
           onPress={() => setIsModalVisible(true)}
-          color="#007AFF"
+        >
+          <Text style={styles.addButtonText}>ADD A GOAL</Text>
+        </TouchableOpacity>
+        <FlatList
+          style={styles.list}
+          data={goals}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.goalItem}>
+              <Text style={styles.goalText}>{item.text}</Text>
+              <TouchableOpacity onPress={() => goalDeleteHandler(item.id)}>
+                <Text style={styles.deleteText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No goals to show</Text>
+          }
         />
       </View>
-      {receivedData ? (
-        <Text style={styles.receivedDataText}>Last added goal: {receivedData}</Text>
-      ) : null}
-      <FlatList
-        style={styles.bottomView}
-        contentContainerStyle={styles.listContent}
-        data={goals}
-        renderItem={renderGoalItem}
-        keyExtractor={item => item.id}
-      />
       <Input
         visible={isModalVisible}
-        onInputSubmit={handleAddGoal}
-        onCancel={handleCancel}
+        onInputSubmit={handleInputData}
+        onCancel={dismissModal}
       />
     </SafeAreaView>
   );
@@ -73,57 +70,52 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  topView: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  header: {
-    borderColor: 'purple',
-    borderWidth: 1,
-    padding: 10,
-    width: '90%',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 18,
-    color: 'purple',
-  },
-  receivedDataText: {
-    fontSize: 16,
-    color: 'green',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  bottomView: {
+  content: {
     flex: 1,
-    width: '100%',
-  },
-  listContent: {
     padding: 20,
     alignItems: 'center',
   },
-  textContainer: {
-    backgroundColor: '#aaa',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#8a2be2',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  addButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  list: {
     width: '100%',
+  },
+  goalItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#ddd',
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   goalText: {
+    fontSize: 16,
+  },
+  deleteText: {
+    color: '#FF3B30',
     fontSize: 18,
-    color: 'blue',
+    fontWeight: 'bold',
   },
-  deleteButton: {
-    backgroundColor: 'red',
-    padding: 5,
-    borderRadius: 5,
-  },
-  deleteButtonText: {
-    color: 'white',
+  emptyText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 16,
   },
 });
