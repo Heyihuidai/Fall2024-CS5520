@@ -23,9 +23,7 @@ export default function Home({ navigation }) {
     setGoals(prevGoals => prevGoals.filter(goal => goal.id !== deletedId));
   }
 
-  function navigateToDetails(goalObj) {
-    navigation.navigate('Details', { goalObj });
-  }
+  // Remove the navigateToDetails function as it's no longer needed
 
   return (
     <SafeAreaView style={sharedStyles.container}>
@@ -46,7 +44,7 @@ export default function Home({ navigation }) {
             <GoalItem
               goalObj={item}
               handleDelete={goalDeleteHandler}
-              navigateToDetails={navigateToDetails}
+              // Remove the navigateToDetails prop
             />
           )}
           ListEmptyComponent={

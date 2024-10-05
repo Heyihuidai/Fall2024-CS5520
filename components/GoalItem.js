@@ -1,13 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function GoalItem({ goalObj, handleDelete, navigateToDetails }) {
+export default function GoalItem({ goalObj, handleDelete }) {
+  const navigation = useNavigation();
+
+  const navigateToDetails = () => {
+    navigation.navigate('Details', { goalObj });
+  };
+
   return (
     <View style={styles.goalItem}>
       <Text style={styles.goalText}>{goalObj.text}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => navigateToDetails(goalObj)}
+          onPress={navigateToDetails}
           style={styles.infoButton}
         >
           <Text style={styles.buttonText}>i</Text>
@@ -21,16 +28,34 @@ export default function GoalItem({ goalObj, handleDelete, navigateToDetails }) {
 }
 
 const styles = StyleSheet.create({
-  text: {
-    color: "purple",
-    fontSize: 35,
-    padding: 5,
-  },
-  textContainer: {
+  goalItem: {
     backgroundColor: "#aaa",
     borderRadius: 5,
     marginTop: 5,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  goalText: {
+    color: "purple",
+    fontSize: 35,
+    padding: 5,
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  infoButton: {
+    marginRight: 10,
+  },
+  buttonText: {
+    color: "blue",
+    fontSize: 24,
+  },
+  deleteText: {
+    color: "red",
+    fontSize: 24,
   },
 });
