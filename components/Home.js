@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { StatusBar } from "expo-status-bar";
 import Input from "./Input";
+import GoalItem from "./GoalItem";
 
 export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,6 +29,10 @@ export default function Home({ navigation }) {
     setGoals(prevGoals => prevGoals.filter(goal => goal.id !== deletedId));
   }
 
+  function navigateToDetails(goalObj) {
+    navigation.navigate('Details', { goalObj });
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -44,12 +49,11 @@ export default function Home({ navigation }) {
           data={goals}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.goalItem}>
-              <Text style={styles.goalText}>{item.text}</Text>
-              <TouchableOpacity onPress={() => goalDeleteHandler(item.id)}>
-                <Text style={styles.deleteText}>✕</Text>
-              </TouchableOpacity>
-            </View>
+            <GoalItem
+              goalObj={item}
+              handleDelete={goalDeleteHandler}
+              navigateToDetails={navigateToDetails}
+            />
           )}
           ListEmptyComponent={
             <Text style={styles.emptyText}>No goals to show</Text>
@@ -57,7 +61,7 @@ export default function Home({ navigation }) {
         />
       </View>
       <Input
-        visible={isModalVisible}
+        modalVisible={isModalVisible}
         onInputSubmit={handleInputData}
         onCancel={dismissModal}
       />
