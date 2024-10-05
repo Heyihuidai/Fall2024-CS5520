@@ -1,29 +1,43 @@
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useLayoutEffect } from 'react';
+import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
+import sharedStyles from '../styles/sharedStyles.js';
 
 export default function GoalDetails({ route, navigation }) {
   const { goalObj } = route.params;
+  const [isWarning, setIsWarning] = useState(false);
 
-  const handleMoreDetails = () => {
-    navigation.push('Details', { 
-      goalObj: {
-        ...goalObj,
-        additionalInfo: 'This is some additional information about the goal.'
-      }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: isWarning ? 'Warning!' : goalObj.text,
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={{ color: '#fff', marginLeft: 10 }}>All My Goals</Text>
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity onPress={() => setIsWarning(!isWarning)}>
+          <Text style={{ color: '#fff', marginRight: 10 }}>Warning</Text>
+        </TouchableOpacity>
+      ),
     });
-  };
+  }, [navigation, isWarning, goalObj.text]);
+
+  const textStyle = [
+    styles.detailText,
+    isWarning && styles.warningText
+  ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Goal Details</Text>
-        <Text style={styles.detailText}>Goal: {goalObj.text}</Text>
-        <Text style={styles.detailText}>ID: {goalObj.id}</Text>
+    <SafeAreaView style={sharedStyles.container}>
+      <View style={sharedStyles.content}>
+        <Text style={sharedStyles.title}>Goal Details</Text>
+        <Text style={textStyle}>Goal: {goalObj.text}</Text>
+        <Text style={textStyle}>ID: {goalObj.id}</Text>
         {goalObj.additionalInfo && (
-          <Text style={styles.detailText}>Additional Info: {goalObj.additionalInfo}</Text>
+          <Text style={textStyle}>Additional Info: {goalObj.additionalInfo}</Text>
         )}
-        <TouchableOpacity style={styles.button} onPress={handleMoreDetails}>
-          <Text style={styles.buttonText}>More Details</Text>
+        <TouchableOpacity style={sharedStyles.button} onPress={() => navigation.goBack()}>
+          <Text style={sharedStyles.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -31,34 +45,11 @@ export default function GoalDetails({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
   detailText: {
     fontSize: 18,
     marginBottom: 10,
   },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  warningText: {
+    color: 'red',
   },
 });
