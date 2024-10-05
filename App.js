@@ -13,7 +13,16 @@ export default function App() {
         <Stack.Screen 
           name="Home" 
           component={Home}
-          options={{ title: 'My Awesome App' }}
+          options={{
+            title: 'My Awesome App',
+            headerStyle: {
+              backgroundColor: '#8a2be2',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
         />
         <Stack.Screen 
           name="Details" 
