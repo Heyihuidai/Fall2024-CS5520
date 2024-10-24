@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
-import { app, database } from './firebaseSetup';
+import { app, database } from '../Firebase/firebaseSetup';
 import { collection, addDoc, onSnapshot, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
 import { writeToDB } from "../Firebase/firestoreHelper";
 
