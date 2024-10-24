@@ -1,76 +1,165 @@
-import React, { useState } from 'react';
-import { Text, View, SafeAreaView, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { StatusBar } from "expo-status-bar";
+import {
+  Button,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Alert,
+} from "react-native";
+import Header from "./Header";
+import { useState, useEffect } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
-import sharedStyles from '../styles/sharedStyles.js';
+import PressableButton from "./PressableButton";
+import { app, database } from './firebaseSetup';
+import { collection, addDoc, onSnapshot, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
+import { writeToDB } from "../Firebase/firestoreHelper";
 
 export default function Home({ navigation }) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [receivedData, setReceivedData] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+  const appName = "My app!";
+  const collectionName = 'goals';
 
-  function handleInputData(data) {
-    let newGoal = { text: data, id: Math.random().toString() };
-    setGoals(prevGoals => [...prevGoals, newGoal]);
-    setIsModalVisible(false);
+  useEffect(() => {
+    onSnapshot(collection(database, collectionName), (querySnapshot) => {
+      //define an array
+      let newArray = [];
+      querySnapshot.forEach((docSnapshot) => {
+        //populate the array
+        newArray.push({ ...docSnapshot.data(), id: docSnapshot.id });
+        console.log(docSnapshot.data());
+      });
+      //setGoals with the newArray
+      setGoals(newArray);
+    });
+  }, []);
+
+  async function handleInputData(data) {
+    console.log("App.js ", data);
+    let newGoal = { text: data };
+    try {
+      await writeToDB(newGoal, collectionName);
+      setModalVisible(false);
+      console.log("Write to DB successful");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   }
 
   function dismissModal() {
-    setIsModalVisible(false);
+    setModalVisible(false);
   }
 
-  function goalDeleteHandler(deletedId) {
-    setGoals(prevGoals => prevGoals.filter(goal => goal.id !== deletedId));
+  async function handleGoalDelete(deletedId) {
+    try {
+      await deleteFromDB(deletedId, collectionName);
+      console.log("Goal successfully deleted!");
+    } catch (error) {
+      console.error("Error removing goal: ", error);
+    }
   }
 
-  // Remove the navigateToDetails function as it's no longer needed
+  async function deleteAll() {
+    Alert.alert("Delete All", "Are you sure you want to delete all goals?", [
+      {
+        text: "Yes",
+        onPress: async () => {
+          try {
+            const snapshot = await getDocs(collection(database, collectionName));
+            snapshot.forEach(async (doc) => {
+              await deleteDoc(doc.ref);
+            });
+          } catch (error) {
+            console.error("Error deleting all documents: ", error);
+          }
+        },
+      },
+      { text: "No", style: "cancel" },
+    ]);
+  }
 
   return (
-    <SafeAreaView style={sharedStyles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <View style={sharedStyles.content}>
-        <Text style={sharedStyles.title}>Welcome to My awesome app</Text>
-        <TouchableOpacity
-          style={[sharedStyles.button, styles.addButton]}
-          onPress={() => setIsModalVisible(true)}
+      <View style={styles.topView}>
+        <Header name={appName}></Header>
+        <PressableButton
+          pressedHandler={() => setModalVisible(true)}
+          componentStyle={{ backgroundColor: "purple" }}
         >
-          <Text style={sharedStyles.buttonText}>ADD A GOAL</Text>
-        </TouchableOpacity>
+          <Text style={styles.buttonText}>Add a Goal</Text>
+        </PressableButton>
+      </View>
+      <Input
+        textInputFocus={true}
+        inputHandler={handleInputData}
+        isModalVisible={modalVisible}
+        dismissModal={dismissModal}
+      />
+      <View style={styles.bottomView}>
         <FlatList
-          style={styles.list}
-          data={goals}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <GoalItem
-              goalObj={item}
-              handleDelete={goalDeleteHandler}
-              // Remove the navigateToDetails prop
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View
+              style={{
+                height: 5,
+                backgroundColor: highlighted ? "purple" : "gray",
+              }}
             />
           )}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No goals to show</Text>
+            <Text style={styles.header}>No goals to show</Text>
           }
+          ListHeaderComponent={
+            goals.length > 0 && <Text style={styles.header}>My Goals List</Text>
+          }
+          ListFooterComponent={
+            goals.length > 0 && <Button title="Delete all" onPress={deleteAll} />
+          }
+          contentContainerStyle={styles.scrollViewContainer}
+          data={goals}
+          renderItem={({ item, separators }) => (
+            <GoalItem
+              separators={separators}
+              deleteHandler={handleGoalDelete}
+              goalObj={item}
+            />
+          )}
         />
       </View>
-      <Input
-        visible={isModalVisible}
-        onInputSubmit={handleInputData}
-        onCancel={dismissModal}
-      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  addButton: {
-    marginBottom: 20,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "center",
   },
-  list: {
-    width: '100%',
+  scrollViewContainer: {
+    alignItems: "center",
   },
-  emptyText: {
-    textAlign: 'center',
-    color: '#888',
-    fontSize: 16,
+  topView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomView: { 
+    flex: 4, 
+    backgroundColor: "#dcd" 
+  },
+  header: {
+    color: "indigo",
+    fontSize: 25,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 20,
   },
 });

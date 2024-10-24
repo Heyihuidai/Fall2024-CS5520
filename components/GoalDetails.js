@@ -1,55 +1,52 @@
-import React, { useState, useLayoutEffect } from 'react';
-import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
-import sharedStyles from '../styles/sharedStyles.js';
+import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import PressableButton from "./PressableButton";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-export default function GoalDetails({ route, navigation }) {
-  const { goalObj } = route.params;
-  const [isWarning, setIsWarning] = useState(false);
-
-  useLayoutEffect(() => {
+export default function GoalDetails({ navigation, route }) {
+  const [warning, setWarning] = useState(false);
+  function warningHandler() {
+    setWarning(true);
+    navigation.setOptions({ title: "Warning!" });
+  }
+  useEffect(() => {
     navigation.setOptions({
-      title: isWarning ? 'Warning!' : goalObj.text,
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={{ color: '#fff', marginLeft: 10 }}>All My Goals</Text>
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity onPress={() => setIsWarning(!isWarning)}>
-          <Text style={{ color: '#fff', marginRight: 10 }}>Warning</Text>
-        </TouchableOpacity>
-      ),
+      headerRight: () => {
+        return (
+          // <Button title="Warning" color="white" onPress={warningHandler} />
+          <PressableButton
+            pressedHandler={warningHandler}
+            componentStyle={{ backgroundColor: "purple" }}
+            pressedStyle={{ opacity: 0.5, backgroundColor: "purple" }}
+          >
+            <AntDesign name="warning" size={24} color="white" />
+          </PressableButton>
+        );
+      },
     });
-  }, [navigation, isWarning, goalObj.text]);
+  }, []);
 
-  const textStyle = [
-    styles.detailText,
-    isWarning && styles.warningText
-  ];
+  function moreDetailsHandler() {
+    navigation.push("Details");
+  }
 
   return (
-    <SafeAreaView style={sharedStyles.container}>
-      <View style={sharedStyles.content}>
-        <Text style={sharedStyles.title}>Goal Details</Text>
-        <Text style={textStyle}>Goal: {goalObj.text}</Text>
-        <Text style={textStyle}>ID: {goalObj.id}</Text>
-        {goalObj.additionalInfo && (
-          <Text style={textStyle}>Additional Info: {goalObj.additionalInfo}</Text>
-        )}
-        <TouchableOpacity style={sharedStyles.button} onPress={() => navigation.goBack()}>
-          <Text style={sharedStyles.buttonText}>Go Back</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View>
+      {route.params ? (
+        <Text style={warning && styles.warningStyle}>
+          This is details of a goal with text {route.params.goalData.text} and
+          id {route.params.goalData.id}
+        </Text>
+      ) : (
+        <Text style={warning && styles.warningStyle}>More details</Text>
+      )}
+      <Button title="More Details" onPress={moreDetailsHandler} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  detailText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  warningText: {
-    color: 'red',
+  warningStyle: {
+    color: "red",
   },
 });

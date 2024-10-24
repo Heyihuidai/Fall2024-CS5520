@@ -1,55 +1,97 @@
+import {
+  Alert,
+  Button,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Modal, StyleSheet, Alert, Image, Text } from 'react-native';
 
-export default function Input({ visible, onInputSubmit, onCancel }) {
+export default function Input({
+  textInputFocus,
+  inputHandler,
+  isModalVisible,
+  dismissModal,
+}) {
   const [text, setText] = useState("");
-
-  const handleConfirm = () => {
-    if (text.trim().length > 0) {
-      onInputSubmit(text);
-      setText("");
-    }
-  };
-  
-  const handleCancel = () => {
+  const [blur, setBlur] = useState(false);
+  const minimumChar = 3;
+  function handleConfirm() {
+    // console.log(text);
+    inputHandler(text);
     setText("");
-    onCancel();
-  };
-
+  }
+  function handleCancel() {
+    // hide the modal
+    Alert.alert("Cancel", "Are you sure you want to cancel", [
+      { text: "cancel", style: "cancel" },
+      {
+        text: "ok",
+        onPress: () => {
+          setText("");
+          dismissModal();
+        },
+      },
+    ]);
+  }
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onCancel}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.inputContainer}>
-          <Image 
-          source={{uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png'}}
-          style={styles.image}
-          lt="Network image of a goal icon"
-          />
-          <Image 
-            source={require('../assets/image_lab2.png')}
+    <Modal animationType="slide" visible={isModalVisible} transparent={true}>
+      <View style={styles.container}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/2617/2617812.png",
+            }}
             style={styles.image}
+            alt="Image of a an arrow"
           />
+          <Image
+            source={require("../assets/goal.png")}
+            style={styles.image}
+            alt="Image of a an arrow"
+          />
+
           <TextInput
-            placeholder="Enter your goal"
-            style={styles.input}
+            autoFocus={textInputFocus}
+            placeholder="Type something"
+            autoCorrect={true}
+            keyboardType="default"
             value={text}
-            onChangeText={setText}
+            style={styles.input}
+            onChangeText={(changedText) => {
+              setText(changedText);
+            }}
+            onBlur={() => {
+              setBlur(true);
+            }}
+            onFocus={() => {
+              setBlur(false);
+            }}
           />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleCancel} style={styles.button}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={handleConfirm} 
-              style={[styles.button, styles.confirmButton]}
-            >
-              <Text style={styles.confirmButtonText}>Confirm</Text>
-            </TouchableOpacity>
+
+          {blur ? (
+            text.length >= minimumChar ? (
+              <Text>Thank you</Text>
+            ) : (
+              <Text>Please type more than {minimumChar} characters</Text>
+            )
+          ) : (
+            text && <Text>{text.length}</Text>
+          )}
+          <View style={styles.buttonsRow}>
+            <View style={styles.buttonContainer}>
+              <Button title="Cancel" onPress={handleCancel} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                disabled={text.length < minimumChar}
+                title="Confirm"
+                onPress={handleConfirm}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -58,49 +100,27 @@ export default function Input({ visible, onInputSubmit, onCancel }) {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  inputContainer: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
+    // backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
   },
   input: {
     borderColor: "purple",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    width: '100%',
-    fontSize: 16,
-    marginBottom: 20,
+    borderWidth: 2,
+    padding: 5,
+    marginVertical: 10,
+  },
+  modalContainer: {
+    borderRadius: 6,
+    backgroundColor: "#999",
+    alignItems: "center",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    width: "30%",
+    margin: 10,
   },
-  button: {
-    padding: 10,
-    borderRadius: 5,
-    width: '45%',
-    alignItems: 'center',
-  },
-  confirmButton: {
-    backgroundColor: '#007AFF',
-  },
-  buttonText: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
+  buttonsRow: { flexDirection: "row" },
+  image: { width: 100, height: 100 },
 });
