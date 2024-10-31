@@ -8,7 +8,10 @@ export default function Profile({ navigation }) {
     try {
       await signOut(auth);
       Alert.alert("Success", "Signed out successfully!");
-      navigation.replace("Login"); // Navigate to Login screen after successful sign out
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
     } catch (error) {
       console.error("Error signing out: ", error);
       Alert.alert("Error", "Failed to sign out. Please try again.");

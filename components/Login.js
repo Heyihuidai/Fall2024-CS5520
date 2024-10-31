@@ -6,19 +6,35 @@ import { auth } from "../Firebase/firebaseSetup";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const signupHandler = () => {
-    navigation.replace("Signup");
+    navigation.navigate("Signup");
   };
+
   const loginHandler = async () => {
     if (email.length === 0 || password.length === 0) {
-      Alert.alert("All fields should be provided");
+      Alert.alert("Error", "All fields should be provided");
       return;
     }
     try {
+      setIsLoading(true);
       const userCred = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCred.user);
+      console.log("Login successful:", userCred.user.email);
+      navigation.replace("Home"); // Navigate to Home after successful login
     } catch (err) {
-      console.log("login ", err);
+      console.error("Login error:", err);
+      let errorMessage = "Login failed. Please try again.";
+      if (err.code === 'auth/invalid-email') {
+        errorMessage = "Invalid email address.";
+      } else if (err.code === 'auth/user-not-found') {
+        errorMessage = "No account found with this email.";
+      } else if (err.code === 'auth/wrong-password') {
+        errorMessage = "Incorrect password.";
+      }
+      Alert.alert("Error", errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -29,9 +45,9 @@ export default function Login({ navigation }) {
         placeholder="Email"
         style={styles.input}
         value={email}
-        onChangeText={(changedText) => {
-          setEmail(changedText);
-        }}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
       />
       <Text style={styles.label}>Password</Text>
       <TextInput
@@ -39,12 +55,15 @@ export default function Login({ navigation }) {
         secureTextEntry={true}
         placeholder="Password"
         value={password}
-        onChangeText={(changedText) => {
-          setPassword(changedText);
-        }}
+        onChangeText={setPassword}
+        autoCapitalize="none"
       />
-      <Button title="Login" onPress={loginHandler} />
-      <Button title="New User? Create An Account" onPress={signupHandler} />
+      <Button title="Login" onPress={loginHandler} disabled={isLoading} />
+      <Button 
+        title="New User? Create An Account" 
+        onPress={signupHandler} 
+        disabled={isLoading}
+      />
     </View>
   );
 }

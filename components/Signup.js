@@ -93,9 +93,9 @@ export default function Signup({ navigation }) {
         style={styles.input}
         placeholder="Email"
         value={email}
-        onChangeText={(changedText) => {
-          setEmail(changedText);
-        }}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
       />
       <Text style={styles.label}>Password</Text>
       <TextInput
