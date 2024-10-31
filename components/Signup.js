@@ -1,12 +1,14 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { auth } from "../Firebase/firebaseSetup";
+import { auth, db } from "../Firebase/firebaseSetup";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const loginHandler = () => {
     navigation.replace("Login");
@@ -16,6 +18,7 @@ export default function Signup({ navigation }) {
 
   const signupHandler = async () => {
     try {
+      setIsLoading(true);
       if (
         email.length === 0 ||
         password.length === 0 ||
@@ -62,12 +65,27 @@ export default function Signup({ navigation }) {
         email,
         password
       );
-      console.log(userCred.user);
+      await setDoc(doc(db, "users", userCred.user.uid), {
+        email: userCred.user.email,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      });
+
+      console.log("User created successfully:", userCred.user.uid);
+      Alert.alert("Success", "Account created successfully!");
+      navigation.replace("Login");
     } catch (err) {
-      console.log("sign up ", err);
-      Alert.alert(err.message);
-    }
+        console.error("Signup error:", err);
+        if (err.code === 'auth/email-already-in-use') {
+          Alert.alert("Error", "This email is already registered");
+        } else {
+          Alert.alert("Error", err.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Email</Text>
@@ -99,8 +117,16 @@ export default function Signup({ navigation }) {
           setConfirmPassword(changedText);
         }}
       />
-      <Button title="Register" onPress={signupHandler} />
-      <Button title="Already Registered? Login" onPress={loginHandler} />
+      <Button 
+        title="Register" 
+        onPress={signupHandler} 
+        disabled={isLoading}
+      />
+      <Button 
+        title="Already Registered? Login" 
+        onPress={loginHandler}
+        disabled={isLoading}
+      />
     </View>
   );
 }
