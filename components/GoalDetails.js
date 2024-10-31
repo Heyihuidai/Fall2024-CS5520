@@ -1,64 +1,164 @@
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import PressableButton from "./PressableButton";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { updateDB } from "../Firebase/firestoreHelper";
+import GoalUsers from "./GoalUser";
 
-export default function GoalDetails({ route, navigation }) {
-  const { goalObj } = route.params;
+export default function GoalDetails({ navigation, route }) {
+  const [warning, setWarning] = useState(false);
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
-  const handleMoreDetails = () => {
-    navigation.push('Details', { 
-      goalObj: {
-        ...goalObj,
-        additionalInfo: 'This is some additional information about the goal.'
-      }
+  function warningHandler() {
+    setWarning(true);
+    navigation.setOptions({ title: "Warning!" });
+    updateDB(route.params.goalData.id, { warning: true }, "goals");
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <PressableButton
+            pressedHandler={warningHandler}
+            componentStyle={styles.warningButton}
+            pressedStyle={styles.warningButtonPressed}
+          >
+            <AntDesign name="warning" size={24} color="white" />
+          </PressableButton>
+        );
+      },
     });
-  };
+  }, []);
+
+  function moreDetailsHandler() {
+    navigation.push("Details");
+  }
+
+  const contentPadding = height < 415 ? 10 : 20;
+  const dynamicFontSize = width < 600 ? 14 : 16;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Goal Details</Text>
-        <Text style={styles.detailText}>Goal: {goalObj.text}</Text>
-        <Text style={styles.detailText}>ID: {goalObj.id}</Text>
-        {goalObj.additionalInfo && (
-          <Text style={styles.detailText}>Additional Info: {goalObj.additionalInfo}</Text>
+    <View style={[
+      styles.container,
+      { padding: contentPadding },
+      isLandscape && styles.landscapeContainer
+    ]}>
+      <View style={[
+        styles.contentWrapper,
+        isLandscape && styles.landscapeWrapper
+      ]}>
+        {route.params ? (
+          <Text style={[
+            styles.text,
+            warning && styles.warningStyle,
+            isLandscape && {
+              ...styles.landscapeText,
+              fontSize: dynamicFontSize
+            }
+          ]}>
+            This is details of a goal with text{' '}
+            <Text style={styles.highlight}>
+              {route.params.goalData.text}
+            </Text>
+            {' '}and id{' '}
+            <Text style={styles.highlight}>
+              {route.params.goalData.id}
+            </Text>
+          </Text>
+        ) : (
+          <Text style={[
+            styles.text,
+            warning && styles.warningStyle,
+            isLandscape && {
+              ...styles.landscapeText,
+              fontSize: dynamicFontSize
+            }
+          ]}>
+            More details
+          </Text>
         )}
-        <TouchableOpacity style={styles.button} onPress={handleMoreDetails}>
-          <Text style={styles.buttonText}>More Details</Text>
-        </TouchableOpacity>
+
+        <View style={[
+          styles.buttonContainer,
+          isLandscape && styles.landscapeButtons
+        ]}>
+          <Button 
+            title="More Details" 
+            onPress={moreDetailsHandler} 
+          />
+        </View>
+
+        <View style={[
+          styles.usersContainer,
+          isLandscape && styles.landscapeUsers
+        ]}>
+          {route.params && <GoalUsers id={route.params.goalData.id} />}
+        </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
-  content: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+  landscapeContainer: {
+    flexDirection: 'row',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  contentWrapper: {
+    width: 350,
+    maxWidth: '90%',
+    marginHorizontal: 'auto',
+    padding: 16,
   },
-  detailText: {
-    fontSize: 18,
-    marginBottom: 10,
+  landscapeWrapper: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
+  text: {
     fontSize: 16,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  landscapeText: {
+    textAlign: 'left',
+    flex: 1,
+  },
+  highlight: {
     fontWeight: 'bold',
+    color: '#007AFF',
+  },
+  warningStyle: {
+    color: "red",
+  },
+  buttonContainer: {
+    marginVertical: 10,
+  },
+  landscapeButtons: {
+    marginLeft: 16,
+    flexShrink: 0,
+  },
+  usersContainer: {
+    marginTop: 16,
+  },
+  landscapeUsers: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  warningButton: {
+    backgroundColor: "purple",
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  warningButtonPressed: {
+    opacity: 0.5,
+    backgroundColor: "purple",
   },
 });
