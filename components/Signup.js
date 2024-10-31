@@ -72,8 +72,16 @@ export default function Signup({ navigation }) {
       });
 
       console.log("User created successfully:", userCred.user.uid);
-      Alert.alert("Success", "Account created successfully!");
-      navigation.replace("Login");
+      Alert.alert("Success", "Account created successfully!", [
+        {
+          text: "OK",
+          onPress: () => {
+            // Navigate to Home screen instead of Login
+            navigation.replace("Home");
+          }
+        }
+      ]);
+
     } catch (err) {
         console.error("Signup error:", err);
         if (err.code === 'auth/email-already-in-use') {
@@ -103,9 +111,8 @@ export default function Signup({ navigation }) {
         secureTextEntry={true}
         placeholder="Password"
         value={password}
-        onChangeText={(changedText) => {
-          setPassword(changedText);
-        }}
+        onChangeText={setPassword}
+        autoCapitalize="none"
       />
       <Text style={styles.label}>Confirm Password</Text>
       <TextInput
@@ -113,9 +120,8 @@ export default function Signup({ navigation }) {
         secureTextEntry={true}
         placeholder="Confirm Password"
         value={confirmPassword}
-        onChangeText={(changedText) => {
-          setConfirmPassword(changedText);
-        }}
+        onChangeText={setConfirmPassword}
+        autoCapitalize="none"
       />
       <Button 
         title="Register" 
