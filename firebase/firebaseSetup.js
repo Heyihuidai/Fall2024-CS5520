@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence, getAuth } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_API_KEY,
@@ -12,6 +13,28 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID
   };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore
 export const database = getFirestore(app);
-export const auth = getAuth(app);
+
+// Initialize Auth with proper error handling
+let auth;
+try {
+    auth = getAuth(app);
+} catch (error) {
+    try {
+        auth = initializeAuth(app, {
+            persistence: getReactNativePersistence(AsyncStorage)
+        });
+    } catch (initError) {
+        if (initError.code !== 'auth/already-initialized') {
+            console.error("Auth initialization error:", initError);
+        }
+        auth = getAuth(app);
+    }
+}
+
+export { auth };
+export default app;
