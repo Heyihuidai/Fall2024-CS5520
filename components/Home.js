@@ -9,7 +9,6 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import Header from "./Header";
 import { useState, useEffect } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
@@ -87,7 +86,6 @@ export default function Home({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.topView}>
-        <Header name={appName}></Header>
         <PressableButton
           pressedHandler={() => setModalVisible(true)}
           componentStyle={{ backgroundColor: "purple" }}
